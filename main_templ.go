@@ -31,7 +31,7 @@ func page(global int, session int) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<!doctype html><html><head><title>Templ in webassembly</title><script src=\"https://unpkg.com/htmx.org@2.0.3\"></script><script src=\"https://unpkg.com/htmx-ext-sse@2.2.2/sse.js\"></script></head><body><div><h1 id=\"global_count\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<!doctype html><html><head><title>Templ in webassembly</title><script src=\"https://unpkg.com/htmx.org@2.0.3\"></script><script src=\"https://unpkg.com/htmx-ext-sse@2.2.2/sse.js\"></script></head><body><div sse-connect=\"/sse\" hx-ext=\"sse\"><h1 id=\"global_count\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -44,20 +44,20 @@ func page(global int, session int) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h1><p>Global</p><button id=\"global_increment\" hx-sync=\"#global_increment:queue all\" hx-post=\"/increment/global\" hx-target=\"#global_count\" hx-ext=\"sse\" sse-connect=\"/sse\" sse-swap=\"global\">+1</button></div><div><h1 id=\"session_count\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h1><p>Global</p><button id=\"global_increment\" hx-sync=\"#global_increment:queue all\" hx-post=\"/increment/global\" hx-target=\"#global_count\" sse-swap=\"global\">+1</button></div><div><h1 id=\"session_count\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(session))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `main.templ`, Line: 28, Col: 50}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `main.templ`, Line: 26, Col: 50}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h1><p>Session</p><button id=\"session_increment\" hx-sync=\"#session_increment:queue all\" hx-sync=\"\" hx-post=\"/increment/session\" hx-target=\"#session_count\" hx-ext=\"sse\" sse-connect=\"/sse\" sse-swap=\"session\">+1</button></div></body></html>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h1><p>Session</p><button id=\"session_increment\" hx-sync=\"#session_increment:queue all\" hx-sync=\"\" hx-post=\"/increment/session\" hx-target=\"#session_count\" sse-swap=\"session\">+1</button></div></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

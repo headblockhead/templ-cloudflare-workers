@@ -5,7 +5,6 @@ import (
 	"os"
 	"strconv"
 
-	"math/rand"
 	"time"
 
 	"github.com/a-h/templ"
@@ -53,24 +52,31 @@ func main() {
 		}
 		w.Write([]byte(strconv.Itoa(count)))
 	})
-	mux.HandleFunc("/sse", sseHandler)
+	mux.HandleFunc("/sse", func(w http.ResponseWriter, req *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Cache-Control", "no-cache")
+		w.Header().Set("Connection", "keep-alive")
+		w.Header().Set("Content-Type", "text/event-stream")
+		for {
+			globalCount, err := get(kv, "global")
+			if err != nil {
+				http.Error(w, "error fetching global counter", http.StatusInternalServerError)
+				return
+			}
+			w.Write([]byte("event: global\ndata: " + strconv.Itoa(globalCount) + "\n\n"))
+
+			sessionCount, err := get(kv, session.ID(req))
+			if err != nil {
+				http.Error(w, "error fetching session counter", http.StatusInternalServerError)
+				return
+			}
+			w.Write([]byte("event: session\ndata: " + strconv.Itoa(sessionCount) + "\n\n"))
+
+			time.Sleep(time.Millisecond * 500)
+		}
+	})
 	withCookie := session.NewMiddleware(mux)
 	workers.Serve(withCookie)
-}
-
-globalEvents := make(chan int)
-
-func sseHandler(w http.ResponseWriter, req *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Cache-Control", "no-cache")
-	w.Header().Set("Connection", "keep-alive")
-	w.Header().Set("Content-Type", "text/event-stream")
-
-	// send a random number every 2 seconds
-	for {
-		w.Write([]byte("event: global\ndata: " + strconv.Itoa(<-globalEvents) + "\n\n"))
-		time.Sleep(2 * time.Second)
-	}
 }
 
 func get(kv *cloudflare.KVNamespace, key string) (count int, err error) {

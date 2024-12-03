@@ -11,7 +11,7 @@ templ page(global int, session int) {
 			<script src="https://unpkg.com/htmx-ext-sse@2.2.2/sse.js"></script>
 		</head>
 		<body>
-			<div>
+			<div sse-connect="/sse" hx-ext="sse">
 				<h1 id="global_count">{ strconv.Itoa(global) }</h1>
 				<p>Global</p>
 				<button
@@ -19,8 +19,6 @@ templ page(global int, session int) {
 					hx-sync="#global_increment:queue all"
 					hx-post="/increment/global"
 					hx-target="#global_count"
-					hx-ext="sse"
-					sse-connect="/sse"
 					sse-swap="global"
 				>+1</button>
 			</div>
@@ -33,8 +31,6 @@ templ page(global int, session int) {
 					hx-sync=""
 					hx-post="/increment/session"
 					hx-target="#session_count"
-					hx-ext="sse"
-					sse-connect="/sse"
 					sse-swap="session"
 				>+1</button>
 			</div>
