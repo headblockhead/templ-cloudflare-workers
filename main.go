@@ -53,25 +53,31 @@ func main() {
 		w.Write([]byte(strconv.Itoa(count)))
 	})
 	mux.HandleFunc("/sse", func(w http.ResponseWriter, req *http.Request) {
+		lastGlobalCount := -1
+		lastSessionCount := -1
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Cache-Control", "no-cache")
 		w.Header().Set("Connection", "keep-alive")
 		w.Header().Set("Content-Type", "text/event-stream")
 		for {
 			globalCount, err := get(kv, "global")
-			if err != nil {
-				http.Error(w, "error fetching global counter", http.StatusInternalServerError)
-				return
+			if lastGlobalCount != globalCount {
+				if err != nil {
+					http.Error(w, "error fetching global counter", http.StatusInternalServerError)
+					return
+				}
+				w.Write([]byte("event: global\ndata: " + strconv.Itoa(globalCount) + "\n\n"))
+				lastGlobalCount = globalCount
 			}
-			w.Write([]byte("event: global\ndata: " + strconv.Itoa(globalCount) + "\n\n"))
-
 			sessionCount, err := get(kv, session.ID(req))
-			if err != nil {
-				http.Error(w, "error fetching session counter", http.StatusInternalServerError)
-				return
+			if lastSessionCount != sessionCount {
+				if err != nil {
+					http.Error(w, "error fetching session counter", http.StatusInternalServerError)
+					return
+				}
+				w.Write([]byte("event: session\ndata: " + strconv.Itoa(sessionCount) + "\n\n"))
+				lastSessionCount = sessionCount
 			}
-			w.Write([]byte("event: session\ndata: " + strconv.Itoa(sessionCount) + "\n\n"))
-
 			time.Sleep(time.Millisecond * 500)
 		}
 	})
