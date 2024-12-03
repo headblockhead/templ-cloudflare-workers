@@ -7,18 +7,36 @@ templ page(global int, session int) {
 	<html>
 		<head>
 			<title>Templ in webassembly</title>
-			<script src="https://unpkg.com/htmx.org@1.9.12"></script>
+			<script src="https://unpkg.com/htmx.org@2.0.3"></script>
+			<script src="https://unpkg.com/htmx-ext-sse@2.2.2/sse.js"></script>
 		</head>
 		<body>
 			<div>
 				<h1 id="global_count">{ strconv.Itoa(global) }</h1>
 				<p>Global</p>
-				<button id="global_increment" hx-sync="#global_increment:queue all" hx-post="/increment/global" hx-target="#global_count">+1</button>
+				<button
+					id="global_increment"
+					hx-sync="#global_increment:queue all"
+					hx-post="/increment/global"
+					hx-target="#global_count"
+					hx-ext="sse"
+					sse-connect="/sse"
+					sse-swap="global"
+				>+1</button>
 			</div>
 			<div>
 				<h1 id="session_count">{ strconv.Itoa(session) }</h1>
 				<p>Session</p>
-				<button id="session_increment" hx-sync="#session_increment:queue all" hx-sync="" hx-post="/increment/session" hx-target="#session_count">+1</button>
+				<button
+					id="session_increment"
+					hx-sync="#session_increment:queue all"
+					hx-sync=""
+					hx-post="/increment/session"
+					hx-target="#session_count"
+					hx-ext="sse"
+					sse-connect="/sse"
+					sse-swap="session"
+				>+1</button>
 			</div>
 		</body>
 	</html>

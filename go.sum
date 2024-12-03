@@ -1,8 +1,8 @@
-github.com/a-h/templ v0.2.663 h1:aa0WMm27InkYHGjimcM7us6hJ6BLhg98ZbfaiDPyjHE=
-github.com/a-h/templ v0.2.663/go.mod h1:SA7mtYwVEajbIXFRh3vKdYm/4FYyLQAtPH1+KxzGPA8=
+github.com/a-h/templ v0.2.793 h1:Io+/ocnfGWYO4VHdR0zBbf39PQlnzVCVVD+wEEs6/qY=
+github.com/a-h/templ v0.2.793/go.mod h1:lq48JXoUvuQrU0VThrK31yFwdRjTCnIE5bcPCM9IP1w=
 github.com/google/go-cmp v0.6.0 h1:ofyhxvXcZhMsU5ulbFiLKl/XBFqE1GSq7atu8tAmTRI=
 github.com/google/go-cmp v0.6.0/go.mod h1:17dUlkBOakJ0+DkrSSNjCkIjxS6bF9zb3elmeNGIjoY=
 github.com/segmentio/ksuid v1.0.4 h1:sBo2BdShXjmcugAMwjugoGUdUV0pcxY5mW4xKRn3v4c=
 github.com/segmentio/ksuid v1.0.4/go.mod h1:/XUiZBD3kVx5SmUOl55voK5yeAbBNNIed+2O73XgrPE=
-github.com/syumai/workers v0.26.0 h1:icxE2mimM6138HUyXoz8nBjq2bC7YHPTSB8qAaHi31k=
-github.com/syumai/workers v0.26.0/go.mod h1:ZnqmdiHNBrbxOLrZ/HJ5jzHy6af9cmiNZk10R9NrIEA=
+github.com/syumai/workers v0.27.0 h1:Y3J4KtlYveAaXXQYnoE/JjiQzKY0a3/O2GQDHApC55Y=
+github.com/syumai/workers v0.27.0/go.mod h1:ZnqmdiHNBrbxOLrZ/HJ5jzHy6af9cmiNZk10R9NrIEA=

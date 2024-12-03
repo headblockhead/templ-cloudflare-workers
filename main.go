@@ -5,6 +5,9 @@ import (
 	"os"
 	"strconv"
 
+	"math/rand"
+	"time"
+
 	"github.com/a-h/templ"
 	"github.com/headblockhead/templwasm/session"
 	"github.com/syumai/workers"
@@ -50,8 +53,24 @@ func main() {
 		}
 		w.Write([]byte(strconv.Itoa(count)))
 	})
+	mux.HandleFunc("/sse", sseHandler)
 	withCookie := session.NewMiddleware(mux)
 	workers.Serve(withCookie)
+}
+
+globalEvents := make(chan int)
+
+func sseHandler(w http.ResponseWriter, req *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Cache-Control", "no-cache")
+	w.Header().Set("Connection", "keep-alive")
+	w.Header().Set("Content-Type", "text/event-stream")
+
+	// send a random number every 2 seconds
+	for {
+		w.Write([]byte("event: global\ndata: " + strconv.Itoa(<-globalEvents) + "\n\n"))
+		time.Sleep(2 * time.Second)
+	}
 }
 
 func get(kv *cloudflare.KVNamespace, key string) (count int, err error) {
