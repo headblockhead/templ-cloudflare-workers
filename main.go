@@ -5,6 +5,8 @@ import (
 	"os"
 	"strconv"
 
+	"time"
+
 	"github.com/a-h/templ"
 	"github.com/headblockhead/templwasm/session"
 	"github.com/syumai/workers"
@@ -49,6 +51,35 @@ func main() {
 			return
 		}
 		w.Write([]byte(strconv.Itoa(count)))
+	})
+	mux.HandleFunc("/sse", func(w http.ResponseWriter, req *http.Request) {
+		lastGlobalCount := -1
+		lastSessionCount := -1
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Cache-Control", "no-cache")
+		w.Header().Set("Connection", "keep-alive")
+		w.Header().Set("Content-Type", "text/event-stream")
+		for {
+			globalCount, err := get(kv, "global")
+			if lastGlobalCount != globalCount {
+				if err != nil {
+					http.Error(w, "error fetching global counter", http.StatusInternalServerError)
+					return
+				}
+				w.Write([]byte("event: global\ndata: " + strconv.Itoa(globalCount) + "\n\n"))
+				lastGlobalCount = globalCount
+			}
+			sessionCount, err := get(kv, session.ID(req))
+			if lastSessionCount != sessionCount {
+				if err != nil {
+					http.Error(w, "error fetching session counter", http.StatusInternalServerError)
+					return
+				}
+				w.Write([]byte("event: session\ndata: " + strconv.Itoa(sessionCount) + "\n\n"))
+				lastSessionCount = sessionCount
+			}
+			time.Sleep(time.Millisecond * 500)
+		}
 	})
 	withCookie := session.NewMiddleware(mux)
 	workers.Serve(withCookie)
